@@ -5,4 +5,4 @@ Welcome to our iKommunicate SDK on GitHub. This SDK is intended to help develope
 
 The SDK documentation is included in the associated Wiki.
 
-For information on Signal K the Open Source data format for the "Internet of Boats" please visit [http://signalk.org](http://signalk.org)
+For information on Signal K the Open Source data format for the "Internet of Boats" please visit [http://signalk.org](http://signalk.org) and for more information on iKommunicate please visit [http://ikommunicate.com](http://ikommunicate.com)
