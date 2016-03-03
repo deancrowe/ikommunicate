@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>SK WebSocket Example</title>
+
+
+<script type="text/javascript">
+
+// First ask user what IP Address iKommunicate is
+var ipaddr = prompt("Please enter iKommunicate IP Address", "i.e. 192.168.1.20");
+// Ideally you would get the IP address automatically using Bonjour/mDNS
+
+
+function WebSocketTest()
+{
+    // Construct the Websocket URL by adding IP Address to Signal K path
+	var signalKWebSocket = new WebSocket("ws://" + ipaddr + "/signalk/v1/stream");
+
+	// Open WebSocket Callback
+	signalKWebSocket.onopen = function() 
+	{
+		console.log("WebSocket Open");
+		// Web Socket is connected, send command to get data send()
+		var subscriptionObject = {
+		"context": "vessels.self",
+		"subscribe": [{
+		"path": "*"
+		}]
+		};
+		var subscriptionMessage = JSON.stringify(subscriptionObject);
+		console.log("Sending subscription:" + subscriptionMessage)
+		signalKWebSocket.send(subscriptionMessage);
+	}
+
+	// Any Key Press Callback
+	document.onkeypress = function()
+	{
+		signalKWebSocket.close()
+	}
+	
+	// Close WebSocket Callback
+	signalKWebSocket.onclose = function() 
+	{
+		// Web Socket is Closed
+		console.log("WebSocket Closed");
+	}
+	// SignalK Message Received Callback
+	var dataDiv = document.getElementById('data');
+	signalKWebSocket.onmessage = function(event) {
+	dataDiv.innerHTML = JSON.stringify(JSON.parse(event.data), null, 2);
+	}
+		
+}
+
+</script>
+
+</head>
+
+<body>
+    <div id="top"/>
+	<a href="javascript:WebSocketTest()">Click to Open Web Socket and stream Signal K Deltas </a>
+	<p>Press any key to close Web Socket</p>
+	</div>
+	 <div id="data"/>
+	</div>
+	
+</body>
+
+</html>
