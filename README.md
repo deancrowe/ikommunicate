@@ -7,6 +7,6 @@ The "SDK-Deltas-WebSocket-Example-V1.html" webpage provides an introduction to o
 
 The "SDK-Depth-REST-Example-V1.html" webpage (and associated files in the "depthLibrary" folder) shows how you can poll specific data from iKommunicate using an Http REST API call. The returned JSON message is then parsed, to create a JSON object from which the Depth data is extracted. The example also shows how to display the depth data on a Javascript Gauge, in this case using the [JustGage plugin](http://justgage.com/). 
 
-The full Developer's Guide documentation is included in the associated Wiki.
+The full Developer's Guide documentation is included in the [associated Wiki](https://github.com/digitalyacht/ikommunicate/wiki/iKommunicate-Developer's-Guide-(SDK)).
 
 For information on Signal K the Open Source data format for the "Internet of Boats" please visit [http://signalk.org](http://signalk.org) and for more information on iKommunicate please visit [http://ikommunicate.com](http://ikommunicate.com)
