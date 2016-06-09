@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8"/>
+  <title>Depth Gauge</title>
+  <meta name="viewport" content="width=device-width">
+
+  <style>
+  .container {
+    width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .gauge {
+    width: 640px;
+    height: 640px;
+  }
+
+  a:link.button,
+  a:active.button,
+  a:visited.button,
+  a:hover.button {
+    margin: 30px 5px 0 2px;
+    padding: 7px 13px;
+  }
+
+  </style>
+
+  <script src="depthLibrary/raphael-2.1.4.min.js"></script>
+  
+  <script src="depthLibrary/justgage.js"></script>
+  
+  <script>
+  // Start by defining the depth gauge "dg1"
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var dg1 = new JustGage({
+      id: "dg1",
+      value : 0,
+      min: 0,
+      max: 100,
+      decimals: 1,
+	  title: "Depth",
+      label: "Meters",
+      gaugeWidthScale: 0.6,
+      customSectors: [{
+        color : "#ff0000",
+        lo : 0,
+        hi : 10
+      },{
+        color : "#00ff00",
+        lo : 10,
+        hi : 100
+      }],
+      counter: true
+    });
+	
+	// Refresh the guage reading every second
+	setInterval(function() {
+            dg1.refresh(depthForGauge);
+            }, 1000);
+  
+  });
+  </script>
+  
+  <script>
+
+// First ask user what Address iKommunicate has or address of another server
+var addr = prompt("Please enter iKommunicate or Server Address", "i.e. 192.168.1.20 or demo.signalk.org");
+// Ideally you would get the IP address automatically using Bonjour/mDNS
+
+// Define the global variables
+var dataDiv = document.getElementById('data');
+var depthForGauge = 0;
+
+function updateDisplay(event) {
+  // Convert the JSON Message in to an Object 
+  var depthRaw = JSON.parse(event.target.responseText);
+  // Extract the Depth Value you want i.e. change belowKeel to belowSurface or belowTransducer
+  var depth = depthRaw.belowKeel.value;
+  // Reduce the number resolution to 3 places i.e. 0.01 to 999
+  depthForGauge = depth.toPrecision(3);
+  // Set a timer that triggers a new REST API call after 1 second
+  setTimeout(fetchDataFromRestApi, 1000);
+}
+
+//use the XTMLHttp set of commands to get the JSON Message of depth via a REST API call
+function fetchDataFromRestApi() {
+	var oReq = new XMLHttpRequest();
+	oReq.addEventListener("load", updateDisplay);
+	// Build the URL from the addr the user entered and the Signal K branch you want to get
+	oReq.open("GET", "http://" + addr + "/signalk/v1/api/vessels/self/environment/depth");
+	oReq.send();
+} 
+
+fetchDataFromRestApi();   
+
+</script>
+
+</head>
+
+
+<body>
+
+  <div class="container">
+    <div id="dg1" class="gauge"></div>
+    <p id="dg1_text">0-10 is red, 11-100 is Green</p>
+  </div>
+
+</body>
+
+</html>
